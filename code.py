@@ -15,6 +15,7 @@ import statsmodels.formula.api as smf
 import statsmodels.api as sm
 import seaborn as sns
 import scipy
+sns.set()
 
 ####################################
 # Download dataset and add columns
@@ -57,12 +58,17 @@ plt.show()
 # with a random intercept for each subject
 m0 = smf.mixedlm("logrt ~ so", data, groups=data['subject']).fit()
 print(m0.summary())
+# intercept c'est beta0
+# beta1 c'est so
+# scale residual standart error c'est sigma de epsilon
+# z-value c'est beta chap / std error
+
 # print(m0.random_effects)
 
 # AIC to see which models is the best
 # total parameters = 3 + 1 for estimated residual
 dev_m0 = (-2)*m0.llf
-AIC_m0 = dev_m0 + 2*(3+1)
+AIC_m0 = dev_m0 + 2*(3+1) #p=3
 print(AIC_m0)
 
 ##################################
@@ -121,22 +127,9 @@ print(m1.summary())
 
 # AIC to see which models is the best
 dev_m1 = (-2)*m1.llf
-AIC_m1 = dev_m1 + 2*(5+1)
+AIC_m1 = dev_m1 + 2*(5+1) 
 print(AIC_m1)
-
-# good thing for no correlation ??????
-# free = sm.regression.mixed_linear_model.MixedLMParams.from_components(
-#        np.ones(2), np.eye(2))
-# mdf = smf.mixedlm("logrt~so", data, groups=data['subject'], re_formula="~so")
-# .\
-#     fit(free=free)
-# print(mdf.summary())
-# AIC to see which models is the best
-# dev = (-2)*mdf.llf
-# AIC_m1_ = dev + 2*(5+1)
-# print(AIC_m1_)
 # adding random slopes for each subject takes up 2 more degrees of freedom
-
 
 # to see if adding random slope improve the model or not
 dev_diff = dev_m0 - dev_m1
@@ -205,12 +198,12 @@ plt.savefig('resid_norm_m2.pdf')
 # Cross random effects for subjects and for items
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-# data["grp"] = data["subject"].astype(str) + data["item"].astype(str)
-# free = sm.regression.mixed_linear_model.MixedLMParams.from_components(
-#        np.ones(2), np.eye(2))
-# mdf = smf.mixedlm("logrt~so", data, groups=data['grp'], re_formula="~so").\
-#    fit(free=free)
-# print(mdf.summary())
+# data["group"] = 1                                                                                       
+# vcf = {"item": "0 + C(item)", "subject":"0 + C(subject)"}
+# model = sm.MixedLM.from_formula("logrt ~ so", groups="group",                                               
+#         vc_formula=vcf, re_formula="~so",data=data).fit()
+# print(model.summary())
+
 
 ######################################################################
 # Model type 3 : varying intercepts and slopes with correlation
@@ -220,21 +213,77 @@ plt.savefig('resid_norm_m2.pdf')
 # Mixed LM
 # ~~~~~~~~~~~~~
 
-# data["grp"] = data["subject"].astype(str) + data["item"].astype(str)
-# model = smf.mixedlm("logrt~ so", data, groups=data["grp"], re_formula='~so')\
-# .fit()
-# print(model.summary())
+vc = {'item': '0 + C(item)'}
+mod=sm.MixedLM.from_formula('logrt~so', vc_formula=vc, re_formula='1+so',
+							groups='subject', data=data)
+result = mod.fit()
+print(result.summary())
 
-# data["groups"] = 1 # Put everyone in the same group.
-# vcf = { "item": "0 + C(item)", "subject": "0 + C(subject)"}
-# model = smf.mixedlm("logrt ~ so", re_formula="~so", vc_formula=vcf,
-# groups="groups", data=data)
-# result = model.fit()
-# print(result.summary())
+	
 
 ###############
 # Visualization
 # ~~~~~~~~~~~~~
 
+plt.figure()
+fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(15, 8), sharey=True)
+so_adj_m3 = np.array([result.random_effects[i][1] for i in range(1,
+                     len(result.random_effects) + 1)])
+so_adj_m3 = sorted(so_adj_m3)
+sd_so = result.cov_re.values[1][1]
+
+fig.suptitle('Intercept and slope adjustments for each subject')
+ax1.scatter(so_adj_m3, np.arange(1, 43), color='r')
+for i in range(1, 43):
+    ax1.plot([so_adj_m3[i-1]-sd_so, so_adj_m3[i-1]+sd_so],
+             [i]*2, "-", color='blue')
+ax1.set_ylabel('subject')
+ax1.set_xlabel('slope')
+ax1.set_title('Slope adjustments for each subject')
+
+inter_adj_m3 = np.array([result.random_effects[i][0] for i in range(1,
+                        len(result.random_effects) + 1)])
+inter_adj_m3 = sorted(inter_adj_m3)
+sd = result.cov_re.values[0][0]
+
+ax2.scatter(inter_adj_m3, np.arange(1, 43), color='r')
+for i in range(1, 43):
+    ax2.plot([inter_adj_m3[i-1]-sd, inter_adj_m3[i-1]+sd],
+             [i]*2, "-", color='blue')
+ax2.set_ylabel('subject')
+ax2.set_xlabel('intercept')
+ax2.set_title('Intercept adjustments for each subject')
+plt.savefig('model3_inter.pdf')
 
 
+#############################################################
+# slope adjustments relative to intersection adjustments
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+int_adj_m3 = np.array([result.random_effects[i][0] for i in range(1,
+                     len(result.random_effects) + 1)])
+so_adj_m3 = np.array([result.random_effects[i][1] for i in range(1,
+                     len(result.random_effects) + 1)])
+plt.figure()
+plt.plot(int_adj_m3,so_adj_m3, 'go')
+plt.xlabel('Intercept adjustments(subject)')
+plt.ylabel('Slope adjustments')
+plt.savefig('adj_so_inter.pdf')
+
+# AIC to see which models is the best
+dev_m3 = (-2)*result.llf
+AIC_m3 = dev_m3 + 2*(8+1) 
+print(AIC_m3)
+	
+############BIC
+BIC_0 = (-2)*(m0.llf) + (3+1) * np.log(672)
+BIC_1 = (-2)*(m1.llf) + (5+1) * np.log(672)
+BIC_2 = (-2)*(result.llf) + (8+1) * np.log(672)
+print(BIC_0, BIC_1, BIC_2)
+# BIC formula : -2 * loglikehood + (number of params + 1) * ln(numbers of obs)
+# best model is the model m1 who correspond of varying intercept
+
+###############AIC
+AIC_0 = (-2)*m0.llf + 2*(3+1) 
+AIC_1 = (-2)*m1.llf + 2*(5+1) 
+AIC_2 = (-2)*result.llf + 2*(8+1) 
+print(AIC_0, AIC_1, AIC_2)

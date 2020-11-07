@@ -245,9 +245,6 @@ The output of the model is:
 First, by the results of the mixed linear model, we have:
 $\hat{\sigma}_{u0}=0.317$, $\hat{\sigma}_{u1}=0.110$ and $\hat{\sigma}=\sqrt{0.1336}=0.366$.
 
-In addition, we can see that the intercept(subject) and the adjusted slope by subjects explain around $50\%$ of the variations. Indeed, we have: $\dfrac{\hat{\sigma}_{u0}^2}{\hat{\sigma}_{u0}^2+\hat{\sigma}^2} + \dfrac{\hat{\sigma}_{u1}^2}{\hat{\sigma}_{u1}^2+\hat{\sigma}^2} =\dfrac{0.1005}{0.1005+0.1336} + \dfrac{0.0121}{0.0121+0.1336} \simeq 0.5$.
-So, after the variance explained by fixed effects, the differences between the subjects and the adjusted slope by subjects explain almost $50\%$ of the remaining variance.
-
 In order to determine if the slope is significantly different from $0$ or not, we will study its confidence interval.
 Indeed, if its confidence interval includes the value $0$, we can say that the slope is not significantly different from $0$.
 The confidence interval of the slope is $[0.019, 0.105]$. So, as the latter does not include $0$, we can affirm at the $5\%$ threshold that the slope is significantly different from $0$.

@@ -10,7 +10,7 @@
 \newcommand*{\AIC}{\mathrm{AIC}}
 \newcommand*{\BIC}{\mathrm{BIC}}
 
-\addbibresource{bibli.bib}
+\addbibresource{./tex/sty/bibli.bib}
 
 
 
@@ -24,7 +24,7 @@
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}
+\begin{frame}[plain]
 \bigskip
 \bigskip
 \begin{center}{
@@ -62,25 +62,16 @@ Université de Montpellier \\
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}{Table of Contents}
-\tableofcontents[hideallsubsections]
+\begin{frame}[plain]{Table of Contents}
+\tableofcontents
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%\AtBeginSection[]
-%{
-%\begin{frame}<beamer>{Table of Contents}
-%\tableofcontents[currentsubsection,
-%    hideothersubsections,
-%    sectionstyle=show/shaded,
-%]
-%\end{frame}
-%}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\addtocounter{framenumber}{-2}
 \section{Introduction}
 \label{sec:introdcution}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -88,22 +79,38 @@ Université de Montpellier \\
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}{Introduction}
-Linear mixed models :
+\vspace{-0.5cm}
+\begin{onlyenv}<1>
+\begin{center}
+  \textit{Which model is less bad for our data?}  
+\end{center}
+\end{onlyenv}
+
+\begin{onlyenv}<2->
+\begin{center}
+  \textit{Which model is less bad for our data?}  
+\end{center}
+
+Linear mixed models:
+
+\medskip
+
 \begin{itemize}
     \item Extension of simple linear models to have fixed and random effects,
     \item fixed effect: constant parameter,
-    \item random effect: parameter that is random variable,
+    \item random effect: parameter that is a random variable,
     \item used when the data is not independent.
     \end{itemize}
+\end{onlyenv}
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}{Data presentation}
+Data from Grodner and Gibson, Expt $1$,
 \begin{itemize}
-    \item From Grodner and Gibson, Expt $1$,
-    \item analysis of the reading times at the relative clause verb in a self-paced reading study,
-    \item $672$ observations, $42$ subjects and $4$ features.
+    \item Analysis of the reading times at the relative clause verb in a self-paced reading study,
+    \item $672$ observations, $42$ subjects and $6$ features ($2$ created).
 \end{itemize}
 \begin{center}
     \begin{tabular}{|c|c|c|c|c|c|}
@@ -114,11 +121,11 @@ Linear mixed models :
          42 & 16 & subjgap & 316 & -1 & 5.756\\
          \hline
     \end{tabular}
-    \captionof{table}{Example of a data extract} 
+    \captionof{table}{Extraction of some data.} 
 \end{center}
 \begin{itemize}
     \item feature so: represents the contrast coding,
-    \item feature logrt: represents log-transformed reading time
+    \item feature logrt: represents ln-transformed reading time.
 \end{itemize}
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -130,28 +137,43 @@ Linear mixed models :
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[plain]{}
+    \begin{center}
+        \LARGE Model type 1: Varying intercepts
+    \end{center}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\addtocounter{framenumber}{-1}
 \begin{frame}{Equation of the model 1}
+\begin{onlyenv}<1>
 \mytheorem{Model equation}
-{\[y_{ij}=\beta_0+ u_{0i} + \beta_1 \times so_{ij}+\varepsilon_{ij},\]}
+{\[y_{ij}=\beta_0+ u_{0i} + \beta_1 \times so_{ij}+\varepsilon_{ij}\enspace,\]}
+\end{onlyenv}
 
 \medskip
+\medskip
 
+\begin{onlyenv}<2->
+\mytheorem{Model equation}
+{\[y_{ij}=\beta_0+ u_{0i} + \beta_1 \times so_{ij}+\varepsilon_{ij}\enspace,\]}
  \begin{itemize}
         \item By-subject adjustment to the intercept,
         \item $i \in \llbracket1,42\rrbracket$ indexes subjects, $j \in \llbracket1,16 \rrbracket$ indexes items,
         \item intercept and slope: fixed effects and $u_0$: random effect,
         \item $2$ sources of variance:
         \end{itemize}
- $$u_{0} {\sim} \mathcal{N}(0, \sigma_{u0}>0) \text{ ,}\enspace 
- \varepsilon {\sim} \mathcal{N}(0,\sigma>0).$$
-
+ $$u_{0} {\sim} \mathcal{N}(0, \sigma_{u0}>0) , \quad \varepsilon {\sim} \mathcal{N}(0,\sigma>0).$$
+\end{onlyenv}
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}{Formulas for model selection}
+\begin{frame}{Formulas for the model selection}
 \vspace{-0.7cm}
-\[\textit{\underline{Goal}: minimize the value of the criteria.}\]
+\[\textit{\textbf{Goal}: minimize the value of each criterion.}\]
 
 \medskip
 
@@ -163,8 +185,8 @@ Linear mixed models :
 \medskip
 
 \begin{itemize}
-    \item $1$: estimated residual variance,
-    \item $p$: all the other parameters estimate,
+    \item $1$: for the estimated residual variance,
+    \item $p$: for all the other parameters estimate,
     \item $n$: number of observations.
 \end{itemize}
 \end{frame}
@@ -172,8 +194,9 @@ Linear mixed models :
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}[fragile]{Results of the linear mixed model}
+\begin{onlyenv}<1>
 \begin{itemize}
-    \item Package Statsmodels from Python
+    \item Package \texttt{Statsmodels} from Python
 \end{itemize}
 \begin{lstlisting}
 model_0=smf.mixedlm("logrt~so",data,groups=data['subject'])
@@ -189,30 +212,61 @@ print(model_0.summary())
          0.382 & 0.316 & 0.033 0.091 & $3+1$ & 735.682 & 753.723 \\
          \hline
     \end{tabular}
-    \captionof{table}{Results of the first model} 
+    \captionof{table}{Results of the first model.} 
 \end{center}
+\end{onlyenv}
+\begin{onlyenv}<2->
+\begin{itemize}
+    \item Package \texttt{Statsmodels} from Python
+\end{itemize}
+\begin{lstlisting}
+model_0=smf.mixedlm("logrt~so",data,groups=data['subject'])
+model_0f=model_0.fit()
+print(model_0.summary())
+\end{lstlisting}
+
+\begin{center}
+    \begin{tabular}{|c|c|c|c|c|c|}
+    \hline
+         $\hat{\sigma}$ & $\hat{\sigma}_{u0}$ & $\text{IC}(95\%)(\text{so})$ & parameters & $\AIC$ & $\BIC$ \\
+         \hline \hline
+         0.382 & 0.316 & 0.033 0.091 & $3+1$ & 735.682 & 753.723 \\
+         \hline
+    \end{tabular}
+    \captionof{table}{Results of the first model.} 
+\end{center}
+
 $\longrightarrow$ intercept explains around $40\%$ of the variations,
 
 $\longrightarrow$  at the $5\%$ threshold, the slope is significantly different from $0$.
+\end{onlyenv}
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}{Intercept adjustements by subject}
+\begin{onlyenv}<1>
+\vspace{-0.5cm}
 \begin{figure}[H]
     \centering
     \includegraphics[scale=.45]{./images/model1_inter.pdf}
     \caption{Representation of the intercept adjustements by subject.}
 \end{figure}
-\vspace{-0.3cm}
+\end{onlyenv}
+\begin{onlyenv}<2->
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=.45]{./images/model1_inter.pdf}
+    \caption{Representation of the intercept adjustements by subject.}
+\end{figure}
 \begin{align*}
     \longrightarrow \text{ }& 95\% \text{ confidence intervals},\\
     \longrightarrow \text{ }& \text{different intercept for each subject},\\
     \longrightarrow \text{ }& \text{large variability}.
 \end{align*}
+\end{onlyenv}
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -221,27 +275,41 @@ $\longrightarrow$  at the $5\%$ threshold, the slope is significantly different 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[plain]{}
+    \begin{center}
+        \LARGE Model type 2: Varying intercepts and slopes without correlation
+    \end{center}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\addtocounter{framenumber}{-1}
 \begin{frame}{Equation of the model 2}
+\begin{onlyenv}<1>
 \mytheorem{Model equation}
-{\[y_{ij}=\beta_0+ u_{0i} + (\beta_1 + u_{1i})\times so_{ij}+\varepsilon_{ij}\]}
+{\[y_{ij}=\beta_0+ u_{0i} + (\beta_1 + u_{1i})\times so_{ij}+\varepsilon_{ij}.\]}
+\end{onlyenv}
 
 \medskip
-
+\medskip
+\begin{onlyenv}<2->
+\mytheorem{Model equation}
+{\[y_{ij}=\beta_0+ u_{0i} + (\beta_1 + u_{1i})\times so_{ij}+\varepsilon_{ij}.\]}
  \begin{itemize}
         \item Without correlation,
         \item by-subject adjustment to the intercepts and slopes,
-        \item $i \in \llbracket1,42\rrbracket$ indexes subjects, $j \in \llbracket1,16\rrbracket$ indexes items,
         \item $3$ sources of variance:
     \end{itemize}
-$$u_{0} {\sim} \mathcal{N}(0, \sigma_{u0}>0) \text{ ,}\enspace u_{1} {\sim} \mathcal{N}(0, \sigma_{u1}>0)\enspace,$$
+$$u_{0} {\sim} \mathcal{N}(0, \sigma_{u0}>0), \quad u_{1} {\sim} \mathcal{N}(0, \sigma_{u1}>0)\enspace,$$
 \vspace{-0.5cm}
 $$\varepsilon {\sim} \mathcal{N}(0,\sigma>0).$$
-
+\end{onlyenv}
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}{Results of the linear mixed model}
+\vspace{-0.5cm}
 \begin{center}
     \begin{tabular}{|c|c|c|c|c|c|c|}
     \hline
@@ -250,11 +318,11 @@ $$\varepsilon {\sim} \mathcal{N}(0,\sigma>0).$$
          0.366 & 0.317 & 0.110 & 0.019 0.105 & $4+1$ & 709.146 & 731.598 \\
          \hline
     \end{tabular}
-    \captionof{table}{Results of the second model} 
+    \captionof{table}{Results of the second model.} 
 \end{center}
-$\longrightarrow$ intercept and adjusted slope explains around $50\%$ of the variations,
-\newline
-$\longrightarrow$  at the $5\%$ threshold, the slope is significantly different from $0$,
+\vspace{0.5cm}
+
+$\longrightarrow$  at the $5\%$ threshold, slope $\neq$ $0$,
 \newline
 $\longrightarrow$ second model less "bad" than the first.
 \end{frame}
@@ -262,31 +330,56 @@ $\longrightarrow$ second model less "bad" than the first.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}{Intercept and slope adjustements by subject}
-    \begin{figure}[H]
+\begin{onlyenv}<1>
+\begin{figure}[H]
     \centering
     \includegraphics[scale=.24]{./images/model2_inter.pdf}
     \caption{Graphic of the intercept and slope adjustements by subject.}
     \end{figure}
 \vspace{-0.3cm}
+\end{onlyenv}
+\begin{onlyenv}<2->
+ \begin{figure}[H]
+    \centering
+    \includegraphics[scale=.24]{./images/model2_inter.pdf}
+    \caption{Graphic of the intercept and slope adjustements by subject.}
+    \end{figure}
 \begin{align*}
     \longrightarrow \text{ }& 95\% \text{ confidence intervals},\\
-    \longrightarrow \text{ }& \text{different intercept for each subject},\\
+    \longrightarrow \text{ }& \text{different intercept and slope for each subject},\\
     \longrightarrow \text{ }& \text{low variability in slope},\\
     \longrightarrow \text{ }& \text{large variability in intercept}.
 \end{align*}
+\end{onlyenv}
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}{Model validation}
+\begin{onlyenv}<1>
 \vspace{-0.7cm}
-\[\textit{Check the homogeneity of residues}\]
+\[\textit{\textbf{Goal:} Check the homogeneity of residues.}\]
 \begin{figure}[H]
 \centering
 \begin{subfigure}{.5\textwidth}
   \centering
   \includegraphics[width=1\linewidth]{./images/homo_mod2.pdf}
-  \caption{Representation of the predicted by residual values.}
+  \caption{Predicted values against the residuals.}
+\end{subfigure}%
+\begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[width=1\linewidth, clip,trim={0cm 0cm 0cm 0cm} ]{./images/resid_norm_m2.pdf}
+  \caption{Representation of the normality of the residuals.}
+\end{subfigure}
+\end{figure}
+\end{onlyenv}
+\begin{onlyenv}<2->
+\begin{figure}[H]
+\centering
+\begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[width=1\linewidth]{./images/homo_mod2.pdf}
+  \caption{Predicted values against the residuals.}
 \end{subfigure}%
 \begin{subfigure}{.5\textwidth}
   \centering
@@ -295,30 +388,39 @@ $\longrightarrow$ second model less "bad" than the first.
 \end{subfigure}
 \end{figure}
 \begin{align*}
-    \longrightarrow \text{ }& \text{residues: mainly close to the orange line},\\
+    \longrightarrow \text{ }& \text{residues: mainly close to the zero axis},\\
     \longrightarrow \text{ }& \text{model fits our data well},\\
     \longrightarrow \text{ }& \text{normality of the residuals}.
 \end{align*}
+\end{onlyenv}
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Model type 3: Varying intercepts and slopes withe correlation}
+\section{Model type 3: Varying intercepts and slopes with correlation}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[plain]{}
+    \begin{center}
+        \LARGE Model type 3: Varying intercepts and slopes with correlation
+    \end{center}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\addtocounter{framenumber}{-1}
 \begin{frame}{Equation of the model 3}
 \mytheorem{Model equation}
-{\[y_{ij}=\alpha + u_{0i} + w_{0j} + (\beta + u_{1i} + w_{1j})\times so_{ij}+\varepsilon_{ij}\]}
+{\[y_{ij}=\alpha + u_{0i} + w_{0j} + (\beta + u_{1i} + w_{1j})\times so_{ij}+\varepsilon_{ij}\enspace.\]}
 
-\medskip
+\medskip \medskip
 
  \begin{itemize}
         \item Correlation introduced,
         %between the intercept and slope adjustments,
-        \item $i \in \llbracket1,42\rrbracket$ indexes subjects, $j \in \llbracket1,16\rrbracket$ indexes items,
         \item $\varepsilon \sim \mathcal{N}(0,\sigma>0),$
         \item $\begin{pmatrix}
         u_0 \\
@@ -326,59 +428,48 @@ $\longrightarrow$ second model less "bad" than the first.
         \end{pmatrix}$ $\sim \mathcal{N}\left(\begin{pmatrix}
         0 \\
         0 \\
-        \end{pmatrix}, \Sigma_u\right) \text{ ; }$ $\begin{pmatrix}
+        \end{pmatrix}, \Sigma_u\right), \quad$  $\begin{pmatrix}
         w_0 \\
         w_1 \\
         \end{pmatrix}$ $\sim \mathcal{N}\left(\begin{pmatrix}
         0 \\
         0 \\
-        \end{pmatrix}, \Sigma_w\right)$
+        \end{pmatrix}, \Sigma_w\right)\enspace.$
     \end{itemize}
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%\begin{frame}{Variance-covariance matrix}
-%\begin{itemize}
-%    \item the variance-covariance matrix for subjects is : 
-%    $$\Sigma_u=
-%    \begin{pmatrix}
-%            \sigma_{u0}^2 & \rho_u\sigma_{u0}\sigma_{u1} \\
-%            \rho_u\sigma_{u0}\sigma_{u1} & \sigma_{u1}^2 \\ 
-%        \end{pmatrix}$$
-%        \item the variance-covariance matrix for items is : 
-%    $$\Sigma_w=
-%    \begin{pmatrix}
-%            \sigma_{u0}^2 & \rho_u\sigma_{u0}\sigma_{u1} \\
-%            \rho_u\sigma_{u0}\sigma_{u1} & \sigma_{u1}^2 \\ 
-%        \end{pmatrix}$$
-%\end{itemize}
-%\end{frame}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}{Results of the linear mixed model}
 \begin{itemize}
     \item Number of estimated parameters: $8+1$,
     \item $\AIC$ and $\BIC$ respectively equal to $717.146$ and $757.739$,
-    \item minimal $\AIC$ and $\BIC$ for the second model,
-    \item perfect positive correlation between varying intercepts and slopes for items
+    \item perfect positive correlation between varying intercepts and slopes for items.
 \end{itemize}
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}{Correlation between intercept and slope by subjects}
+\begin{onlyenv}<1>
     \begin{figure}[H]
     \centering
     \includegraphics[scale=.45]{./images/adj_so_inter.pdf}
-    \caption{Graphic of slope adjustements against intercept adjustements.}
+    \caption{Scatterplot of the slope adjustements against intercepts.}
     \end{figure}
 \vspace{-0.3cm}
+\end{onlyenv}
+\begin{onlyenv}<2->
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=.45]{./images/adj_so_inter.pdf}
+    \caption{Scatterplot of the slope adjustements against intercepts.}
+    \end{figure}
 \begin{align*}
-    \longrightarrow \text{ }&\text{data on the graph could fit a linear model},\\
+    \longrightarrow \text{ }&\text{data on the graph could be fit by a linear model},\\
     \longrightarrow \text{ }& \text{some noise on the data}.
 \end{align*}
+\end{onlyenv}
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -409,13 +500,9 @@ $\longrightarrow$ second model less "bad" than the first.
 \begin{frame}{Conclusion}
 \begin{itemize}
     \item Studied three different models,
-    \item statistical model and validation for each, 
+    \item varying intercepts, slopes, add correlation, 
     \item least worse model for our data: second model.
 \end{itemize}
-\begin{figure}[H]
-    \centering
-    \includegraphics[scale=.2]{./images/thanks.pdf}
-    \end{figure}
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -426,7 +513,17 @@ $\longrightarrow$ second model less "bad" than the first.
 \nocite{*}
 \printbibliography
 \end{frame}
- %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\addtocounter{framenumber}{-1}
+\begin{frame}[plain]{}
+\begin{center}
+    \LARGE\color{marron}
+\textbf{Thank you!}
+\end{center}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
 
